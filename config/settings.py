@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,3 +131,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuration django-tailwind pour Windows
 NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+
+AUTH_USER_MODEL = 'core.CustomUser'
+
+
+# Redirection
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/login/'
+
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+     BASE_DIR / 'theme' / 'static',
+]
+
+# Pour la production (collectstatic)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
