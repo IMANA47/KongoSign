@@ -31,3 +31,13 @@ class Document(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.owner.username})"
+    
+
+class DocumentShare(models.Model):
+    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    signataire = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    shared_at = models.DateTimeField(auto_now_add=True)
+    signed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.document.title} → {self.signataire.username}"

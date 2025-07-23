@@ -2,4 +2,38 @@
 {% block content %}
 <h1 class="text-3xl font-bold mb-6">Tableau de bord Signataire</h1>
 <p>Bienvenue {{ request.user.username }}, vous êtes signataire.</p>
+
+<h1 class="text-2xl font-bold mb-4">Documents à signer</h1>
+
+<table class="table w-full bg-white shadow rounded">
+  <thead>
+    <tr>
+      <th>Titre</th>
+      <th>Envoyé le</th>
+      <th>Document</th>
+      <th>Statut</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for share in shares %}
+    <tr>
+      <td>{{ share.document.title }}</td>
+      <td>{{ share.shared_at|date:"d/m/Y H:i" }}</td>
+      <td><a href="{{ share.document.file.url }}" target="_blank" class="link link-primary">Voir</a></td>
+      <td>
+        {% if share.signed %}
+          <span class="badge badge-success">Signé</span>
+        {% else %}
+          <span class="badge badge-warning">En attente</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4">Aucun document reçu pour signature.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 {% endblock %}

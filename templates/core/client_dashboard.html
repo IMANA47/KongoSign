@@ -2,21 +2,24 @@
 {% block content %}
 <h1 class="text-2xl font-bold mb-4">Mes documents</h1>
 
+<!-- Formulaire d'import -->
 <form method="POST" enctype="multipart/form-data" class="mb-6">
   {% csrf_token %}
-  <div class="flex gap-4">
+  <div class="flex flex-col md:flex-row gap-4">
     <input type="text" name="title" placeholder="Titre du document" class="input input-bordered w-full" required>
-    <input type="file" name="file" accept=".pdf" class="file-input file-input-bordered" required>
-    <button type="submit" class="btn btn-primary">Importer</button>
+    <input type="file" name="file" accept=".pdf" class="file-input file-input-bordered w-full" required>
+    <button type="submit" class="btn btn-primary w-full md:w-auto">Importer</button>
   </div>
 </form>
 
+<!-- Tableau des documents -->
 <table class="table w-full bg-white rounded shadow">
   <thead>
     <tr>
       <th>Titre</th>
       <th>Date</th>
       <th>Fichier</th>
+      <th>Partager</th>
     </tr>
   </thead>
   <tbody>
@@ -24,11 +27,25 @@
     <tr>
       <td>{{ doc.title }}</td>
       <td>{{ doc.uploaded_at|date:"d/m/Y H:i" }}</td>
-      <td><a href="{{ doc.file.url }}" target="_blank" class="link link-primary">Voir</a></td>
+      <td>
+        <a href="{{ doc.file.url }}" target="_blank" class="link link-primary">Voir</a>
+      </td>
+      <td>
+        <form method="POST" action="{% url 'share_document' %}">
+          {% csrf_token %}
+          <input type="hidden" name="document_id" value="{{ doc.id }}">
+          <select name="signataire" class="select select-bordered select-sm w-full mb-1" required>
+            {% for s in signataires %}
+              <option value="{{ s.id }}">{{ s.username }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn btn-sm btn-outline btn-accent mt-1">Partager</button>
+        </form>
+      </td>
     </tr>
     {% empty %}
     <tr>
-      <td colspan="3">Aucun document importé.</td>
+      <td colspan="4">Aucun document importé.</td>
     </tr>
     {% endfor %}
   </tbody>
