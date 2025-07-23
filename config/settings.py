@@ -148,3 +148,7 @@ STATICFILES_DIRS = [
 # Pour la production (collectstatic)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+

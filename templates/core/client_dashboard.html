@@ -1,5 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1 class="text-3xl font-bold mb-6">Tableau de bord Client</h1>
-<p>Bienvenue {{ request.user.username }}, vous êtes client.</p>
+<h1 class="text-2xl font-bold mb-4">Mes documents</h1>
+
+<form method="POST" enctype="multipart/form-data" class="mb-6">
+  {% csrf_token %}
+  <div class="flex gap-4">
+    <input type="text" name="title" placeholder="Titre du document" class="input input-bordered w-full" required>
+    <input type="file" name="file" accept=".pdf" class="file-input file-input-bordered" required>
+    <button type="submit" class="btn btn-primary">Importer</button>
+  </div>
+</form>
+
+<table class="table w-full bg-white rounded shadow">
+  <thead>
+    <tr>
+      <th>Titre</th>
+      <th>Date</th>
+      <th>Fichier</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for doc in documents %}
+    <tr>
+      <td>{{ doc.title }}</td>
+      <td>{{ doc.uploaded_at|date:"d/m/Y H:i" }}</td>
+      <td><a href="{{ doc.file.url }}" target="_blank" class="link link-primary">Voir</a></td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3">Aucun document importé.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
